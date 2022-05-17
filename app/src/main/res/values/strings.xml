@@ -4,10 +4,13 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="coin_list">Coin List</string>
     <string name="profile">Profile</string>
-    <string name="login_your_account">Login Your Account</string>
+    <string name="login_your_account">Login to your account</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="register">Register</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="full_name">Full Name</string>
+    <string name="loading">Loading...</string>
 </resources>

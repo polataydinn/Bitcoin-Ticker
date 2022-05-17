@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/visibility.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/visibility_off.xml" value="0.2215" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3880208333333333" />
+        <entry key="app/src/main/res/layout/custom_loading_dialog.xml" value="0.24047501237011382" />
         <entry key="app/src/main/res/layout/fragment_coin_detail.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout/fragment_coin_list.xml" value="0.3880208333333333" />
         <entry key="app/src/main/res/layout/fragment_favorites.xml" value="0.3880208333333333" />
