@@ -28,6 +28,13 @@ class LoginViewModel @Inject constructor(
     private val _loadingResult = MutableLiveData<Boolean>()
     val loadingResult get() = _loadingResult
 
+    private val _isUserLoggedIn = MutableLiveData<Boolean>()
+    val isUserLoggedIn get() = _isUserLoggedIn
+
+    init {
+        _isUserLoggedIn.value = firebaseRepository.isUserLoggedIn()
+    }
+
     fun checkIfInputsAreValid(email: String, password: String) {
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailFormatResult.value = Constants.MAIl_ERROR

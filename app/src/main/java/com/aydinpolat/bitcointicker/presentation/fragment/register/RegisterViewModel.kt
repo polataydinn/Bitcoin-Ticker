@@ -48,15 +48,15 @@ class RegisterViewModel @Inject constructor(
                 _signUpResult.value = it
                 if (it.isSuccessful) {
                     _loadingResult.value = false
-                    saveUserToFirestore(user.email)
+                    saveUserToFirestore(user)
                 }
             }
         }
     }
 
-    private fun saveUserToFirestore(email: String) {
+    private fun saveUserToFirestore(user: User) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.saveUserToFirestore(email)
+            firebaseRepository.saveUserToFirestore(user)
         }
     }
 }

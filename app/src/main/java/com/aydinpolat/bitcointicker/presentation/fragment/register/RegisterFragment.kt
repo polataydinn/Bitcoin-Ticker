@@ -11,6 +11,7 @@ import com.aydinpolat.bitcointicker.data.model.User
 import com.aydinpolat.bitcointicker.databinding.FragmentRegisterBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
+import com.aydinpolat.bitcointicker.presentation.fragment.coin_list.CoinListFragment
 import com.aydinpolat.bitcointicker.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,7 +45,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
                 }
                 false -> {
                     loadingDialog?.dismissDialog()
-                    findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToCoinListFragment())
+                    (activity as MainActivity).loadFragment(CoinListFragment())
                 }
             }
         }

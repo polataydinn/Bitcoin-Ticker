@@ -27,6 +27,12 @@ class FirebaseRepositoryImplementation @Inject constructor(
         }
     }
 
+    override fun isUserLoggedIn(): Boolean {
+        firebaseAuth.currentUser?.let {
+            return true
+        } ?: kotlin.run { return false }
+    }
+
     override suspend fun signUp(
         user: User,
         completeEvent: (AuthenticationResult) -> Unit
@@ -43,8 +49,8 @@ class FirebaseRepositoryImplementation @Inject constructor(
     }
 
     override suspend fun saveUserToFirestore(
-        email: String,
+        user: User,
     ) {
-        firestore.collection("users").document(email).collection("favorites")
+        firestore.collection("users").document(user.email).set(user)
     }
 }

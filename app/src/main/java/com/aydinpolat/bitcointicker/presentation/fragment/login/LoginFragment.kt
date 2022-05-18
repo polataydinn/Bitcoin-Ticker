@@ -10,7 +10,7 @@ import androidx.viewbinding.ViewBinding
 import com.aydinpolat.bitcointicker.databinding.FragmentLoginBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
-import com.aydinpolat.bitcointicker.presentation.fragment.register.RegisterFragmentDirections
+import com.aydinpolat.bitcointicker.presentation.fragment.coin_list.CoinListFragment
 import com.aydinpolat.bitcointicker.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +25,6 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = LoadingDialog((activity as MainActivity))
-        (activity as MainActivity).hideOrShowBottomNavigation(false)
         buttonListeners()
         subscribeObservables()
     }
@@ -43,6 +42,17 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     }
 
     private fun subscribeObservables() {
+        loginViewModel.isUserLoggedIn.observe(viewLifecycleOwner) {
+            if (it) {
+                (activity as MainActivity).apply {
+                    hideOrShowBottomNavigation(true)
+                    loadFragment(CoinListFragment())
+                }
+            } else {
+                (activity as MainActivity).hideOrShowBottomNavigation(false)
+            }
+        }
+
         loginViewModel.emailFormatResult.observe(viewLifecycleOwner) {
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
         }
@@ -53,7 +63,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-                findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToCoinListFragment())
+                (activity as MainActivity).loadFragment(CoinListFragment())
             }
             Toast.makeText(activity, it.resultMessage, Toast.LENGTH_SHORT).show()
         }
