@@ -62,9 +62,6 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         }
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-                (activity as MainActivity).loadFragment(CoinListFragment())
-            }
             Toast.makeText(activity, it.resultMessage, Toast.LENGTH_SHORT).show()
         }
 

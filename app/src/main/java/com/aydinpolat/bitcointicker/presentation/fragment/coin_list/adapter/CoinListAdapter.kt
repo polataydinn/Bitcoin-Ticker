@@ -2,12 +2,12 @@ package com.aydinpolat.bitcointicker.presentation.fragment.coin_list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
 import com.aydinpolat.bitcointicker.databinding.RowCoinItemBinding
 
-class CoinListAdapter : PagingDataAdapter<CoinListItem, CoinListViewHolder>(COINS_DIFF_CALLBACK_) {
+class CoinListAdapter : ListAdapter<CoinListItem, CoinListViewHolder>(COINS_DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinListViewHolder {
         return CoinListViewHolder(
@@ -26,7 +26,7 @@ class CoinListAdapter : PagingDataAdapter<CoinListItem, CoinListViewHolder>(COIN
     }
 
     companion object {
-        val COINS_DIFF_CALLBACK_ = object : DiffUtil.ItemCallback<CoinListItem>() {
+        val COINS_DIFF_CALLBACK = object : DiffUtil.ItemCallback<CoinListItem>() {
             override fun areItemsTheSame(
                 oldItem: CoinListItem,
                 newItem: CoinListItem

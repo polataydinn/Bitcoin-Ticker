@@ -53,6 +53,7 @@ class LoginViewModel @Inject constructor(
             firebaseRepository.login(email, password) {
                 loadingResult.value = false
                 _loginResult.value = it
+                _isUserLoggedIn.value = true
             }
         }
     }

@@ -1,16 +1,13 @@
 package com.aydinpolat.bitcointicker.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
+import androidx.lifecycle.LiveData
+import com.aydinpolat.bitcointicker.common.Constants.PAGE_SIZE
 import com.aydinpolat.bitcointicker.data.local.CoinDao
 import com.aydinpolat.bitcointicker.data.remote.CoinApi
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail
 import com.aydinpolat.bitcointicker.data.remote.model.CoinList
 import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
 import com.aydinpolat.bitcointicker.domain.repository.CoinRepository
-import com.aydinpolat.bitcointicker.domain.use_case.get_paged_coins.GetPagedCoinsSource
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CoinRepositoryImplementation @Inject constructor(
@@ -29,12 +26,12 @@ class CoinRepositoryImplementation @Inject constructor(
         coinDao.insertAllCoins(coinList)
     }
 
-    override suspend fun getCoinsPaged(): Flow<PagingData<CoinListItem>> {
-        return Pager(
-            config = PagingConfig(enablePlaceholders = false, pageSize = 8, prefetchDistance = 8),
-            pagingSourceFactory = {
-                GetPagedCoinsSource(coinDao)
-            }
-        ).flow
+    override fun getSearchResult(searchQuery: String): LiveData<List<CoinListItem>> {
+        return coinDao.getSearchResult("%$searchQuery%")
+    }
+
+
+    override fun getAllCoinsFromDb(): LiveData<List<CoinListItem>> {
+        return coinDao.getAllCoins()
     }
 }

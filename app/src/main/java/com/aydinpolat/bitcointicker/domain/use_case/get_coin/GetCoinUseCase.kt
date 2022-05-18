@@ -21,7 +21,7 @@ class GetCoinUseCase @Inject constructor(
         } catch (e: HttpException) {
             emit(
                 Resource.Error<List<CoinListItem>>(
-                    e.localizedMessage ?: "An unexpected error occured"
+                    e.localizedMessage ?: "An unexpected error occurred"
                 )
             )
         } catch (e: IOException) {
