@@ -1,5 +1,6 @@
 package com.aydinpolat.bitcointicker.data.remote.model
 
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.gson.annotations.SerializedName
 
 data class CoinDetail(
@@ -18,5 +19,6 @@ data class CoinDetail(
     @SerializedName("market_data")
     val marketData: MarketData,
     @SerializedName("last_updated")
-    val lastUpdated: String
+    val lastUpdated: String,
+    val isFavorite: Boolean = false
 )

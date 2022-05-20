@@ -60,7 +60,7 @@ object AppModule {
             appContext,
             CoinDatabase::class.java,
             "Coins"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Provides

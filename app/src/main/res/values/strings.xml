@@ -17,5 +17,8 @@
     <string name="price_change_percentage_in_24h">Price change percentage in 24h :</string>
     <string name="hello">Hello,</string>
     <string name="detail_fragment">detail fragment</string>
+    <string name="favorites">Favorites</string>
+    <string name="log_out">Log out</string>
+    <string name="network_error">Couldn\'t reach server check your internet connection</string>
 
 </resources>

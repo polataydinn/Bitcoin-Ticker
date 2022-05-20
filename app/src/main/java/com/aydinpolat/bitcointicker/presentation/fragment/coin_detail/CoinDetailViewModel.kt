@@ -1,17 +1,21 @@
 package com.aydinpolat.bitcointicker.presentation.fragment.coin_detail
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydinpolat.bitcointicker.common.Constants
 import com.aydinpolat.bitcointicker.common.Resource
+import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
 import com.aydinpolat.bitcointicker.domain.use_case.get_coins.GetCoinDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,10 +28,26 @@ class CoinDetailViewModel @Inject constructor(
     private val _coinDetailState = MutableStateFlow(CoinDetailState())
     val coinDetailState: StateFlow<CoinDetailState> = _coinDetailState
 
+    private val _isAddedToFavorite = MutableLiveData<Boolean>()
+    val isAddedToFavorite get() = _isAddedToFavorite
+
+    private val _isFavorite = MutableLiveData(false)
+    val isFavorite get() = _isFavorite
+
     init {
-        savedStateHandle.get<String>(Constants.COIN_ID)?.let { coinId ->
-            getAgentDetail(coinId)
+        savedStateHandle.get<String>(Constants.COIN_ID)?.let {
+            getAgentDetail(it)
+            checkIfFavorite(it)
         }
+    }
+
+    private fun checkIfFavorite(coinId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            firebaseRepository.isCoinFavorite(coinId) {
+                isFavorite.value = it
+            }
+        }
+
     }
 
     private fun getAgentDetail(coinId: String) {
@@ -46,5 +66,33 @@ class CoinDetailViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun setFavorite() {
+        val coinDetail = coinDetailState.value.coinDetail
+        if (coinDetail != null) {
+            val coinListItem = CoinListItem(
+                id = coinDetail.id,
+                name = coinDetail.name,
+                symbol = coinDetail.symbol,
+                isFavorite = true
+            )
+            viewModelScope.launch {
+                firebaseRepository.setFavoriteCoin(coinListItem) {
+                    checkIfFavorite(coinDetail.id)
+                    _isAddedToFavorite.value = it
+                }
+            }
+        }
+    }
+
+    fun deleteFavorite() {
+        val coinDetail = coinDetailState.value.coinDetail
+        if (coinDetail != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                firebaseRepository.removeFavoriteIcon(coinDetail.id)
+                checkIfFavorite(coinDetail.id)
+            }
+        }
     }
 }

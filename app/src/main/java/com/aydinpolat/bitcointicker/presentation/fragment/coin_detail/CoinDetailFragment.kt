@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.aydinpolat.bitcointicker.R
+import com.aydinpolat.bitcointicker.common.Constants.FAVORITE_ADD_ERROR
+import com.aydinpolat.bitcointicker.common.Constants.FAVORITE_ADD_SUCCESS
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail
 import com.aydinpolat.bitcointicker.databinding.FragmentCoinDetailBinding
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
@@ -29,11 +33,20 @@ class CoinDetailFragment : BindingFragment<FragmentCoinDetailBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
         getCoinDetail()
+        setObserves()
     }
 
     private fun setListeners() {
         binding.detailFragmentCloseButton.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.detailFragmentAddFavoriteButton.setOnClickListener {
+            if (coinDetailViewModel.isFavorite.value == true) {
+                coinDetailViewModel.deleteFavorite()
+            } else {
+                coinDetailViewModel.setFavorite()
+            }
         }
     }
 
@@ -54,6 +67,21 @@ class CoinDetailFragment : BindingFragment<FragmentCoinDetailBinding>() {
         }
     }
 
+    private fun setObserves() {
+        coinDetailViewModel.isAddedToFavorite.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(activity, FAVORITE_ADD_SUCCESS, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(activity, FAVORITE_ADD_ERROR, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        coinDetailViewModel.isFavorite.observe(viewLifecycleOwner) {
+            if (it) binding.detailFragmentFavoriteIcon.setImageResource(R.drawable.ic_favorite_white)
+            else binding.detailFragmentFavoriteIcon.setImageResource(R.drawable.ic_favorite_border_white)
+        }
+    }
+
     private fun setCoinToView(coinDetail: CoinDetail) {
         val coinPrice = coinDetail.marketData.currentPrice.usd.toString()
         binding.apply {
@@ -61,8 +89,7 @@ class CoinDetailFragment : BindingFragment<FragmentCoinDetailBinding>() {
             detailFragmentCoinHash.text = coinDetail.hashingAlgorithm
             detailFragmentCoinPrice.text = "$coinPrice$"
             detailFragmentCoinSymbol.text = coinDetail.symbol
-            detailFragmentCoinChangeResult.text =
-                coinDetail.marketData.priceChangePercentage24h.toString()
+            detailFragmentCoinChangeResult.text = coinDetail.marketData.priceChangePercentage24h.toString()
             detailFragmentChangeInHoursText.isVisible = true
 
             Glide.with(binding.root)

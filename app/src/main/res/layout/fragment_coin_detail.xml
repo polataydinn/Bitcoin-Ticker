@@ -59,6 +59,7 @@
             app:layout_constraintTop_toTopOf="@+id/detail_fragment_set_timer_button">
 
             <ImageView
+                android:id="@+id/detail_fragment_favorite_icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/detail_fragment"

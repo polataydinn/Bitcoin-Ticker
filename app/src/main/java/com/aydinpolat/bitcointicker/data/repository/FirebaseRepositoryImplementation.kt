@@ -1,9 +1,8 @@
 package com.aydinpolat.bitcointicker.data.repository
 
-import com.aydinpolat.bitcointicker.common.Constants
-import com.aydinpolat.bitcointicker.data.remote.model.AuthenticationResult
-import com.aydinpolat.bitcointicker.data.remote.model.UserDto
-import com.aydinpolat.bitcointicker.data.remote.model.toUserName
+import com.aydinpolat.bitcointicker.common.Constants.FAVORITES
+import com.aydinpolat.bitcointicker.common.Constants.USERS
+import com.aydinpolat.bitcointicker.data.remote.model.*
 import com.aydinpolat.bitcointicker.domain.model.User
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -30,6 +29,10 @@ class FirebaseRepositoryImplementation @Inject constructor(
         }
     }
 
+    override suspend fun logout() {
+        firebaseAuth.signOut()
+    }
+
     override fun isUserLoggedIn(): Boolean {
         firebaseAuth.currentUser?.let {
             return true
@@ -52,12 +55,12 @@ class FirebaseRepositoryImplementation @Inject constructor(
     }
 
     override suspend fun saveUserToFirestore(user: User) {
-        firestore.collection(Constants.USERS).document(user.email).set(user)
+        firestore.collection(USERS).document(user.email).set(user)
     }
 
     override suspend fun getUserName(completeEvent: (User) -> Unit) {
         firebaseAuth.currentUser?.email?.let {
-            firestore.collection(Constants.USERS).document(it).get()
+            firestore.collection(USERS).document(it).get()
                 .addOnCompleteListener { result ->
                     if (result.isSuccessful) {
                         completeEvent(result.result.toUserName())
@@ -65,4 +68,51 @@ class FirebaseRepositoryImplementation @Inject constructor(
                 }
         }
     }
+
+    override suspend fun setFavoriteCoin(
+        coinListItem: CoinListItem,
+        completeEvent: (Boolean) -> Unit
+    ) {
+        firebaseAuth.currentUser?.email?.let { email ->
+            firestore.collection(USERS).document(email).collection(FAVORITES)
+                .document(coinListItem.id).set(coinListItem).addOnCompleteListener {
+                    completeEvent(it.isSuccessful)
+                }
+        }
+    }
+
+    override suspend fun getFavoriteCoins(favoriteCoins: (List<CoinListItem>) -> Unit) {
+        firebaseAuth.currentUser?.email?.let { email ->
+            firestore.collection(USERS).document(email)
+                .collection(FAVORITES).get().addOnCompleteListener { result ->
+                    if (result.isSuccessful) {
+                        val listOfFavoriteCoins = result.result.documents.mapNotNull {
+                            it.toCoinListItem()
+                        }
+                        favoriteCoins(listOfFavoriteCoins)
+                    } else {
+                        favoriteCoins(emptyList())
+                    }
+                }
+        }
+    }
+
+    override suspend fun removeFavoriteIcon(id: String) {
+        firebaseAuth.currentUser?.email?.let { email ->
+            firestore.collection(USERS).document(email).collection(FAVORITES)
+                .document(id)
+                .delete()
+        }
+    }
+
+    override suspend fun isCoinFavorite(id: String, checkResult: (Boolean) -> Unit) {
+        firebaseAuth.currentUser?.email?.let { email ->
+            firestore.collection(USERS).document(email).collection(FAVORITES).document(id)
+                .get().addOnCompleteListener {
+                    if (it.result.data.isNullOrEmpty()) checkResult(false)
+                    else checkResult(true)
+                }
+        }
+    }
+
 }
