@@ -8,19 +8,44 @@
     android:background="@color/light_purple"
     tools:context=".presentation.fragment.coin_list.CoinListFragment">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/coin_list_fragment_profile_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardBackgroundColor="@color/dark_purple"
+        app:cardCornerRadius="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:src="@drawable/ic_profile_white" />
+    </androidx.cardview.widget.CardView>
+
     <TextView
-        android:id="@+id/coin_list_fragment_search_text"
+        android:id="@+id/coin_list_fragment_hello_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/hello"
+        android:textColor="@color/light_white"
+        android:textSize="22sp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/search"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginStart="16dp" />
+        app:layout_constraintTop_toTopOf="@+id/coin_list_fragment_profile_button" />
+
+    <TextView
+        android:id="@+id/coin_list_fragment_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/coin_list_fragment_hello_text"
+        app:layout_constraintTop_toBottomOf="@+id/coin_list_fragment_hello_text"
+        tools:text="Aydın" />
 
     <TextView
         android:id="@+id/coin_list_fragment_error_text"
@@ -28,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:textAlignment="center"
         android:visibility="invisible"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,17 +70,21 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/custom_edittext_input"
         android:padding="12dp"
+        android:hint="@string/search"
+        android:textColorHint="@color/light_white"
         android:drawableEnd="@drawable/ic_search_white"
         android:queryBackground="@android:color/transparent"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/coin_list_fragment_search_text"
-        app:layout_constraintTop_toBottomOf="@+id/coin_list_fragment_search_text" />
+        app:layout_constraintStart_toStartOf="@+id/coin_list_fragment_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/coin_list_fragment_user_name"
+        android:inputType="text" />
 
     <ProgressBar
         android:id="@+id/coin_list_fragment_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +95,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="70dp"
         android:nestedScrollingEnabled="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"

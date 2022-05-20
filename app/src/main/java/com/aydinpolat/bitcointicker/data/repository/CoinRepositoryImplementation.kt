@@ -1,7 +1,6 @@
 package com.aydinpolat.bitcointicker.data.repository
 
 import androidx.lifecycle.LiveData
-import com.aydinpolat.bitcointicker.common.Constants.PAGE_SIZE
 import com.aydinpolat.bitcointicker.data.local.CoinDao
 import com.aydinpolat.bitcointicker.data.remote.CoinApi
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail

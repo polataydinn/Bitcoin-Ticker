@@ -10,7 +10,6 @@ import androidx.viewbinding.ViewBinding
 import com.aydinpolat.bitcointicker.databinding.FragmentLoginBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
-import com.aydinpolat.bitcointicker.presentation.fragment.coin_list.CoinListFragment
 import com.aydinpolat.bitcointicker.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,12 +43,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     private fun subscribeObservables() {
         loginViewModel.isUserLoggedIn.observe(viewLifecycleOwner) {
             if (it) {
-                (activity as MainActivity).apply {
-                    hideOrShowBottomNavigation(true)
-                    loadFragment(CoinListFragment())
-                }
-            } else {
-                (activity as MainActivity).hideOrShowBottomNavigation(false)
+                findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToCoinListFragment())
             }
         }
 

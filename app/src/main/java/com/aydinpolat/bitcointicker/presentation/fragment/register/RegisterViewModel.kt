@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydinpolat.bitcointicker.common.Constants
-import com.aydinpolat.bitcointicker.data.model.AuthenticationResult
-import com.aydinpolat.bitcointicker.data.model.User
+import com.aydinpolat.bitcointicker.data.remote.model.AuthenticationResult
+import com.aydinpolat.bitcointicker.data.remote.model.UserDto
+import com.aydinpolat.bitcointicker.data.remote.model.toTrimmedUser
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,34 +30,34 @@ class RegisterViewModel @Inject constructor(
     private val _loadingResult = MutableLiveData<Boolean>()
     val loadingResult get() = _loadingResult
 
-    fun checkIfInputsAreValid(user: User) {
-        if (!Patterns.EMAIL_ADDRESS.matcher(user.email).matches()) {
+    fun checkIfInputsAreValid(userDto: UserDto) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(userDto.email).matches()) {
             _emailFormatResult.value = Constants.MAIl_ERROR
         } else {
-            if (user.password.length < 8) {
+            if (userDto.password.length < 8) {
                 _passwordFormatResult.value = Constants.PASSWORD_MIN_LENGTH_ERROR
             } else {
-                register(user)
+                register(userDto)
                 _loadingResult.value = true
             }
         }
     }
 
-    private fun register(user: User) {
+    private fun register(userDto: UserDto) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.signUp(user) {
+            firebaseRepository.signUp(userDto) {
                 _signUpResult.value = it
                 if (it.isSuccessful) {
                     _loadingResult.value = false
-                    saveUserToFirestore(user)
+                    saveUserToFirestore(userDto)
                 }
             }
         }
     }
 
-    private fun saveUserToFirestore(user: User) {
+    private fun saveUserToFirestore(userDto: UserDto) {
         viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.saveUserToFirestore(user)
+            firebaseRepository.saveUserToFirestore(userDto.toTrimmedUser())
         }
     }
 }

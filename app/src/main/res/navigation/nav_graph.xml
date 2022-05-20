@@ -9,7 +9,7 @@
         android:id="@+id/loginFragment"
         android:name="com.aydinpolat.bitcointicker.presentation.fragment.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment"
@@ -17,28 +17,36 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_loginFragment_to_coinListFragment"
+            app:destination="@id/coinListFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/coinDetailFragment"
         android:name="com.aydinpolat.bitcointicker.presentation.fragment.coin_detail.CoinDetailFragment"
         android:label="fragment_coin_detail"
-        tools:layout="@layout/fragment_coin_detail" >
-        <action
-            android:id="@+id/action_coinDetailFragment_to_coinListFragment"
-            app:destination="@id/coinListFragment"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popEnterAnim="@anim/from_right"
-            app:popExitAnim="@anim/to_left" />
+        tools:layout="@layout/fragment_coin_detail">
+        <argument
+            android:name="coin_id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/coinListFragment"
         android:name="com.aydinpolat.bitcointicker.presentation.fragment.coin_list.CoinListFragment"
         android:label="fragment_coin_list"
-        tools:layout="@layout/fragment_coin_list" >
+        tools:layout="@layout/fragment_coin_list">
         <action
             android:id="@+id/action_coinListFragment_to_coinDetailFragment"
             app:destination="@id/coinDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_coinListFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
@@ -50,12 +58,12 @@
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" >
         <action
-            android:id="@+id/action_favoritesFragment_to_profileFragment"
-            app:destination="@id/profileFragment"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popEnterAnim="@anim/from_right"
-            app:popExitAnim="@anim/to_left" />
+            android:id="@+id/action_favoritesFragment_to_coinDetailFragment"
+            app:destination="@id/coinDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -63,12 +71,8 @@
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
-            android:id="@+id/action_registerFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popEnterAnim="@anim/from_right"
-            app:popExitAnim="@anim/to_left" />
+            android:id="@+id/action_registerFragment_to_coinListFragment"
+            app:destination="@id/coinListFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

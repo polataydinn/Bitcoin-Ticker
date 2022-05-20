@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydinpolat.bitcointicker.common.Constants
-import com.aydinpolat.bitcointicker.data.model.AuthenticationResult
+import com.aydinpolat.bitcointicker.data.remote.model.AuthenticationResult
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -14,4 +14,8 @@
     <string name="full_name">Full Name</string>
     <string name="loading">Loading...</string>
     <string name="search">Search</string>
+    <string name="price_change_percentage_in_24h">Price change percentage in 24h :</string>
+    <string name="hello">Hello,</string>
+    <string name="detail_fragment">detail fragment</string>
+
 </resources>

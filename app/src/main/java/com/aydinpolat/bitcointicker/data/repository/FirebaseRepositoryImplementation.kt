@@ -1,7 +1,10 @@
 package com.aydinpolat.bitcointicker.data.repository
 
-import com.aydinpolat.bitcointicker.data.model.AuthenticationResult
-import com.aydinpolat.bitcointicker.data.model.User
+import com.aydinpolat.bitcointicker.common.Constants
+import com.aydinpolat.bitcointicker.data.remote.model.AuthenticationResult
+import com.aydinpolat.bitcointicker.data.remote.model.UserDto
+import com.aydinpolat.bitcointicker.data.remote.model.toUserName
+import com.aydinpolat.bitcointicker.domain.model.User
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,14 +33,14 @@ class FirebaseRepositoryImplementation @Inject constructor(
     override fun isUserLoggedIn(): Boolean {
         firebaseAuth.currentUser?.let {
             return true
-        } ?: kotlin.run { return false }
+        } ?: run { return false }
     }
 
     override suspend fun signUp(
-        user: User,
+        userDto: UserDto,
         completeEvent: (AuthenticationResult) -> Unit
     ) {
-        firebaseAuth.createUserWithEmailAndPassword(user.email, user.password)
+        firebaseAuth.createUserWithEmailAndPassword(userDto.email, userDto.password)
             .addOnCompleteListener {
                 completeEvent(
                     AuthenticationResult(
@@ -48,9 +51,18 @@ class FirebaseRepositoryImplementation @Inject constructor(
             }
     }
 
-    override suspend fun saveUserToFirestore(
-        user: User,
-    ) {
-        firestore.collection("users").document(user.email).set(user)
+    override suspend fun saveUserToFirestore(user: User) {
+        firestore.collection(Constants.USERS).document(user.email).set(user)
+    }
+
+    override suspend fun getUserName(completeEvent: (User) -> Unit) {
+        firebaseAuth.currentUser?.email?.let {
+            firestore.collection(Constants.USERS).document(it).get()
+                .addOnCompleteListener { result ->
+                    if (result.isSuccessful) {
+                        completeEvent(result.result.toUserName())
+                    }
+                }
+        }
     }
 }

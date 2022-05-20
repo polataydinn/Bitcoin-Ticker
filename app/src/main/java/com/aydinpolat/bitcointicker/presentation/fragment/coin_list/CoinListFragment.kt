@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
 import com.aydinpolat.bitcointicker.databinding.FragmentCoinListBinding
@@ -29,15 +30,10 @@ class CoinListFragment : BindingFragment<FragmentCoinListBinding>() {
         super.onViewCreated(view, savedInstanceState)
         recyclerViewSetup()
         listeners()
+        observeUserName()
         getAllCoins()
         observeCoinsResult()
         observeSearchResult()
-    }
-
-    private fun listeners() {
-        binding.coinListFragmentSearchEdittext.addTextChangedListener {
-            coinListViewModel.setSearchQuery(it.toString())
-        }
     }
 
     private fun recyclerViewSetup() {
@@ -45,10 +41,34 @@ class CoinListFragment : BindingFragment<FragmentCoinListBinding>() {
         coinListAdapter.submitList(listOfCoins)
     }
 
-    private fun observeSearchResult() {
-        coinListViewModel.searchResult.observe(viewLifecycleOwner) {
-            clearListOfCoins()
-            addListOfCoins(it)
+    private fun listeners() {
+        binding.coinListFragmentSearchEdittext.addTextChangedListener {
+            coinListViewModel.setSearchQuery(it.toString())
+        }
+        coinListAdapter.onItemClick = {
+            findNavController().navigate(
+                CoinListFragmentDirections.actionCoinListFragmentToCoinDetailFragment(
+                    it
+                )
+            )
+        }
+        binding.coinListFragmentProfileButton.setOnClickListener {
+            findNavController().navigate(CoinListFragmentDirections.actionCoinListFragmentToProfileFragment())
+        }
+    }
+
+    private fun observeUserName() {
+        coinListViewModel.userName.observe(viewLifecycleOwner) {
+            binding.coinListFragmentUserName.text = it
+        }
+    }
+
+    private fun getAllCoins() {
+        coinListViewModel.coinList.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                binding.coinListFragmentProgressBar.isVisible = false
+                addListOfCoins(it)
+            }
         }
     }
 
@@ -66,8 +86,9 @@ class CoinListFragment : BindingFragment<FragmentCoinListBinding>() {
         }
     }
 
-    private fun getAllCoins() {
-        coinListViewModel.coinList.observe(viewLifecycleOwner) {
+    private fun observeSearchResult() {
+        coinListViewModel.searchResult.observe(viewLifecycleOwner) {
+            clearListOfCoins()
             addListOfCoins(it)
         }
     }

@@ -7,11 +7,10 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.aydinpolat.bitcointicker.data.model.User
+import com.aydinpolat.bitcointicker.data.remote.model.UserDto
 import com.aydinpolat.bitcointicker.databinding.FragmentRegisterBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
-import com.aydinpolat.bitcointicker.presentation.fragment.coin_list.CoinListFragment
 import com.aydinpolat.bitcointicker.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,7 +34,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
             val email = binding.registerFragmentEmailEdittext.text.toString().trim()
             val password = binding.registerFragmentPasswordEdittext.text.toString().trim()
             val fullName = binding.registerFragmentFullNameEdittext.text.toString()
-            registerViewModel.checkIfInputsAreValid(User(email, password, fullName))
+            registerViewModel.checkIfInputsAreValid(UserDto(email, password, fullName))
         }
 
         registerViewModel.loadingResult.observe(viewLifecycleOwner) {
@@ -45,7 +44,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
                 }
                 false -> {
                     loadingDialog?.dismissDialog()
-                    (activity as MainActivity).loadFragment(CoinListFragment())
+                    findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToCoinListFragment())
                 }
             }
         }

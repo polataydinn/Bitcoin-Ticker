@@ -9,6 +9,8 @@ import com.aydinpolat.bitcointicker.databinding.RowCoinItemBinding
 
 class CoinListAdapter : ListAdapter<CoinListItem, CoinListViewHolder>(COINS_DIFF_CALLBACK) {
 
+    var onItemClick: ((String) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinListViewHolder {
         return CoinListViewHolder(
             RowCoinItemBinding.inflate(
@@ -21,7 +23,7 @@ class CoinListAdapter : ListAdapter<CoinListItem, CoinListViewHolder>(COINS_DIFF
 
     override fun onBindViewHolder(holder: CoinListViewHolder, position: Int) {
         getItem(position)?.let {
-            holder.bind(it)
+            holder.bind(it, onItemClick)
         }
     }
 
