@@ -1,4 +1,4 @@
 package com.aydinpolat.bitcointicker.data.remote.model
 
 
-class CoinList : ArrayList<CoinListItem>()
+class CoinList : ArrayList<CoinListItemDto>()

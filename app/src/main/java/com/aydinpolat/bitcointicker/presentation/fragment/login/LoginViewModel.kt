@@ -1,60 +1,80 @@
 package com.aydinpolat.bitcointicker.presentation.fragment.login
 
-import android.util.Patterns
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aydinpolat.bitcointicker.common.Constants
-import com.aydinpolat.bitcointicker.data.remote.model.AuthenticationResult
-import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
+import com.aydinpolat.bitcointicker.R
+import com.aydinpolat.bitcointicker.common.SingleLiveEvent
+import com.aydinpolat.bitcointicker.domain.auth.LoginResult
+import com.aydinpolat.bitcointicker.domain.use_case.authentication.ValidateUserUseCase
+import com.aydinpolat.bitcointicker.domain.use_case.authentication.login.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val validateUserUseCase: ValidateUserUseCase,
+    private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
-    private val _loginResult = MutableLiveData<AuthenticationResult>()
-    val loginResult get() = _loginResult
+    private val _uiEvent = SingleLiveEvent<SignInUiEvent>()
+    val uiEvent: LiveData<SignInUiEvent> get() = _uiEvent
 
-    private val _emailFormatResult = MutableLiveData<String>()
-    val emailFormatResult get() = _emailFormatResult
+    private val _state = MutableStateFlow(LoginUiState())
+    val state = _state.asStateFlow()
 
-    private val _passwordFormatResult = MutableLiveData<String>()
-    val passwordFormatResult get() = _passwordFormatResult
-
-    private val _loadingResult = MutableLiveData<Boolean>()
-    val loadingResult get() = _loadingResult
-
-    private val _isUserLoggedIn = MutableLiveData<Boolean>()
-    val isUserLoggedIn get() = _isUserLoggedIn
-
-    init {
-        _isUserLoggedIn.value = firebaseRepository.isUserLoggedIn()
+    fun onEmailChanged(newEmail: String) {
+        val oldState = _state.value
+        if (oldState.email == newEmail) return
+        _state.value = oldState.copy(email = newEmail)
     }
 
-    fun checkIfInputsAreValid(email: String, password: String) {
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailFormatResult.value = Constants.MAIl_ERROR
-        } else {
-            if (password.length < 8) {
-                _passwordFormatResult.value = Constants.PASSWORD_MIN_LENGTH_ERROR
-            } else {
-                loadingResult.value = true
-                login(email, password)
+    fun onPasswordChanged(newPassword: String) {
+        val oldState = _state.value
+        if (oldState.password == newPassword) return
+        _state.value = oldState.copy(password = newPassword)
+    }
+
+    fun onLoginClicked() {
+        _state.value = _state.value.copy(isLoading = true)
+        val state = _state.value
+        when (validateUserUseCase(state.email, state.password)) {
+            ValidateUserUseCase.ValidationUserResult.VALID -> {
+                signInUser(state.email, state.password)
+            }
+            ValidateUserUseCase.ValidationUserResult.EMAIL_NOT_VALID -> {
+                _uiEvent.value =
+                    SignInUiEvent.ShowError(R.string.email_is_not_valid)
+                _state.value = _state.value.copy(isLoading = false)
+            }
+            ValidateUserUseCase.ValidationUserResult.PASSWORD_NOT_VALID -> {
+                _uiEvent.value =
+                    SignInUiEvent.ShowError(R.string.password_is_not_valid)
+                _state.value = _state.value.copy(isLoading = false)
             }
         }
     }
 
-    private fun login(email: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            firebaseRepository.login(email, password) {
-                loadingResult.value = false
-                _loginResult.value = it
-                _isUserLoggedIn.value = true
+    private fun signInUser(email: String, password: String) {
+        viewModelScope.launch {
+            val loginResult = loginUseCase(email, password)
+            _state.value = _state.value.copy(isLoading = false)
+            when (loginResult) {
+                LoginResult.SUCCESS_SIGN_IN -> {
+                    _uiEvent.value =
+                        SignInUiEvent.Navigate(LoginFragmentDirections.actionLoginFragmentToCoinListFragment())
+                }
+                else -> {
+                    _uiEvent.value = SignInUiEvent.ShowError(loginResult.messageResourceId)
+                }
             }
         }
+    }
+
+    fun onRegisterClicked() {
+        _uiEvent.value =
+            SignInUiEvent.Navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
     }
 }

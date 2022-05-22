@@ -33,7 +33,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/favorite_fragment_empty_image"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/ic_empty"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/favorite_fragment_error_text"
@@ -41,15 +53,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
         android:textAlignment="center"
+        android:textColor="@color/light_white"
+        android:text="@string/no_data"
+        android:textSize="16sp"
         android:visibility="invisible"
-        android:text="@string/network_error"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="16sp"/>
+        app:layout_constraintTop_toBottomOf="@+id/favorite_fragment_empty_image" />
 
 
     <androidx.recyclerview.widget.RecyclerView

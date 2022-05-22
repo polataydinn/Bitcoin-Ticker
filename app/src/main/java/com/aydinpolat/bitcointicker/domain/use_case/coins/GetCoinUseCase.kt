@@ -1,7 +1,8 @@
-package com.aydinpolat.bitcointicker.domain.use_case.get_coin
+package com.aydinpolat.bitcointicker.domain.use_case.coins
 
 import com.aydinpolat.bitcointicker.common.Resource
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
+import com.aydinpolat.bitcointicker.data.remote.model.toDomain
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 import com.aydinpolat.bitcointicker.domain.repository.CoinRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +17,7 @@ class GetCoinUseCase @Inject constructor(
         try {
             emit(Resource.Loading<List<CoinListItem>>())
             val coinList: MutableList<CoinListItem> = mutableListOf()
-            coinList.addAll(coinRepository.getAllCoins().toList())
+            coinList.addAll(coinRepository.getAllCoins().toList().map { it.toDomain() })
             emit(Resource.Success<List<CoinListItem>>(coinList))
         } catch (e: HttpException) {
             emit(

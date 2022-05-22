@@ -38,16 +38,6 @@
         app:layout_constraintTop_toTopOf="@+id/coin_list_fragment_profile_button" />
 
     <TextView
-        android:id="@+id/coin_list_fragment_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/coin_list_fragment_hello_text"
-        app:layout_constraintTop_toBottomOf="@+id/coin_list_fragment_hello_text"
-        tools:text="Aydın" />
-
-    <TextView
         android:id="@+id/coin_list_fragment_error_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -76,8 +66,8 @@
         android:queryBackground="@android:color/transparent"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/coin_list_fragment_user_name"
-        app:layout_constraintTop_toBottomOf="@+id/coin_list_fragment_user_name"
+        app:layout_constraintStart_toStartOf="@+id/coin_list_fragment_hello_text"
+        app:layout_constraintTop_toBottomOf="@+id/coin_list_fragment_profile_button"
         android:inputType="text" />
 
     <ProgressBar

@@ -5,7 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
+import com.aydinpolat.bitcointicker.data.remote.model.CoinListItemDto
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 
 @Dao
 interface CoinDao {

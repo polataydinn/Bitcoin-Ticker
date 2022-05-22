@@ -3,7 +3,8 @@ package com.aydinpolat.bitcointicker.domain.repository
 import androidx.lifecycle.LiveData
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail
 import com.aydinpolat.bitcointicker.data.remote.model.CoinList
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
+import com.aydinpolat.bitcointicker.data.remote.model.CoinListItemDto
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 
 interface CoinRepository {
     suspend fun getAllCoins(): CoinList

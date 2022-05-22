@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydinpolat.bitcointicker.common.Constants
 import com.aydinpolat.bitcointicker.common.Resource
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
-import com.aydinpolat.bitcointicker.domain.use_case.get_coins.GetCoinDetailUseCase
+import com.aydinpolat.bitcointicker.domain.use_case.coins.GetCoinDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,7 +58,7 @@ class CoinDetailViewModel @Inject constructor(
                 }
                 is Resource.Error -> {
                     _coinDetailState.value = CoinDetailState(
-                        error = result.message ?: "An unexpected error occured."
+                        error = result.message ?: "An unexpected error occurred."
                     )
                 }
                 is Resource.Loading -> {
@@ -90,7 +90,7 @@ class CoinDetailViewModel @Inject constructor(
         val coinDetail = coinDetailState.value.coinDetail
         if (coinDetail != null) {
             viewModelScope.launch(Dispatchers.IO) {
-                firebaseRepository.removeFavoriteIcon(coinDetail.id)
+                firebaseRepository.removeFavoriteCoin(coinDetail.id)
                 checkIfFavorite(coinDetail.id)
             }
         }

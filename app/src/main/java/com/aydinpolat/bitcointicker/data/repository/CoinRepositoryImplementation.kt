@@ -5,7 +5,8 @@ import com.aydinpolat.bitcointicker.data.local.CoinDao
 import com.aydinpolat.bitcointicker.data.remote.CoinApi
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail
 import com.aydinpolat.bitcointicker.data.remote.model.CoinList
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
+import com.aydinpolat.bitcointicker.data.remote.model.CoinListItemDto
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 import com.aydinpolat.bitcointicker.domain.repository.CoinRepository
 import javax.inject.Inject
 
@@ -28,7 +29,6 @@ class CoinRepositoryImplementation @Inject constructor(
     override fun getSearchResult(searchQuery: String): LiveData<List<CoinListItem>> {
         return coinDao.getSearchResult("%$searchQuery%")
     }
-
 
     override fun getAllCoinsFromDb(): LiveData<List<CoinListItem>> {
         return coinDao.getAllCoins()

@@ -9,7 +9,7 @@ data class UserDto(
     val fullName: String = ""
 )
 
-fun UserDto.toTrimmedUser(): User {
+fun UserDto.toDomain(): User {
     return User(email = email, fullName = fullName)
 }
 
@@ -22,3 +22,4 @@ fun DocumentSnapshot.toUserName(): User {
         User()
     }
 }
+

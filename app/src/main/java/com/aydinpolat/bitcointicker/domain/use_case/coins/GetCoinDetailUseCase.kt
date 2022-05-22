@@ -1,4 +1,4 @@
-package com.aydinpolat.bitcointicker.domain.use_case.get_coins
+package com.aydinpolat.bitcointicker.domain.use_case.coins
 
 import com.aydinpolat.bitcointicker.common.Resource
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail

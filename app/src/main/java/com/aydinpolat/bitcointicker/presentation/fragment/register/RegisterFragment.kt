@@ -3,16 +3,19 @@ package com.aydinpolat.bitcointicker.presentation.fragment.register
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.aydinpolat.bitcointicker.data.remote.model.UserDto
+import com.aydinpolat.bitcointicker.R
+import com.aydinpolat.bitcointicker.common.extentions.showAlertDialog
 import com.aydinpolat.bitcointicker.databinding.FragmentRegisterBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
 import com.aydinpolat.bitcointicker.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
@@ -25,40 +28,63 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadingDialog = LoadingDialog((activity as MainActivity))
+        bindUiToViewModel()
+        collectStateFlow()
+        collectUiEvents()
+    }
 
-        binding.registerFragmentCloseButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        binding.registerFragmentRegisterButton.setOnClickListener {
-            val email = binding.registerFragmentEmailEdittext.text.toString().trim()
-            val password = binding.registerFragmentPasswordEdittext.text.toString().trim()
-            val fullName = binding.registerFragmentFullNameEdittext.text.toString()
-            registerViewModel.checkIfInputsAreValid(UserDto(email, password, fullName))
-        }
-
-        registerViewModel.loadingResult.observe(viewLifecycleOwner) {
+    private fun collectUiEvents() {
+        registerViewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
-                true -> {
-                    loadingDialog?.startLoadingDialog()
+                is RegisterUiEvent.Navigate -> {
+                    findNavController().apply {
+                        navigate(it.direction)
+                    }
                 }
-                false -> {
-                    loadingDialog?.dismissDialog()
-                    findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToCoinListFragment())
+                is RegisterUiEvent.ShowError -> {
+                    showAlertDialog(getString(it.errorMessageResourceId), getString(R.string.error))
                 }
             }
         }
+    }
 
-        registerViewModel.emailFormatResult.observe(viewLifecycleOwner) {
-            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+    private fun collectStateFlow() {
+        lifecycleScope.launchWhenCreated {
+            registerViewModel.state.collect {
+                bindViewModelToUi(it)
+            }
         }
+    }
 
-        registerViewModel.passwordFormatResult.observe(viewLifecycleOwner) {
-            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+    private fun bindViewModelToUi(state: RegisterUiState) {
+        binding.apply {
+            if (registerFragmentEmailEdittext.text?.toString() != state.email) {
+                registerFragmentEmailEdittext.setText(state.email)
+            }
+            if (registerFragmentPasswordEdittext.text?.toString() != state.password) {
+                registerFragmentPasswordEdittext.setText(state.password)
+            }
+            when (state.isLoading) {
+                true -> loadingDialog?.startLoadingDialog()
+                false -> loadingDialog?.dismissDialog()
+            }
         }
+    }
 
-        registerViewModel.signUpResult.observe(viewLifecycleOwner) {
-            Toast.makeText(activity, it.resultMessage, Toast.LENGTH_SHORT).show()
+    private fun bindUiToViewModel() {
+        binding.apply {
+            registerFragmentEmailEdittext.addTextChangedListener {
+                registerViewModel.onEmailChanged(it?.toString() ?: "")
+            }
+            registerFragmentPasswordEdittext.addTextChangedListener {
+                registerViewModel.onPasswordChanged(it?.toString() ?: "")
+            }
+            registerFragmentRegisterButton.setOnClickListener {
+                registerViewModel.onRegisterClicked()
+            }
+            registerFragmentCloseButton.setOnClickListener {
+                registerViewModel.onSignInClicked()
+            }
         }
     }
 }

@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
 import com.aydinpolat.bitcointicker.databinding.RowCoinItemBinding
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 
 class CoinListAdapter : ListAdapter<CoinListItem, CoinListViewHolder>(COINS_DIFF_CALLBACK) {
 

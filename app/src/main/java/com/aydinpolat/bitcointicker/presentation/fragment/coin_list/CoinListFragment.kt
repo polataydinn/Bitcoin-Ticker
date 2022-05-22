@@ -9,8 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.aydinpolat.bitcointicker.data.remote.model.CoinListItem
+import com.aydinpolat.bitcointicker.data.remote.model.CoinListItemDto
 import com.aydinpolat.bitcointicker.databinding.FragmentCoinListBinding
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
 import com.aydinpolat.bitcointicker.presentation.fragment.coin_list.adapter.CoinListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,6 @@ class CoinListFragment : BindingFragment<FragmentCoinListBinding>() {
         super.onViewCreated(view, savedInstanceState)
         recyclerViewSetup()
         listeners()
-        observeUserName()
         getAllCoins()
         observeCoinsResult()
         observeSearchResult()
@@ -57,11 +57,6 @@ class CoinListFragment : BindingFragment<FragmentCoinListBinding>() {
         }
     }
 
-    private fun observeUserName() {
-        coinListViewModel.userName.observe(viewLifecycleOwner) {
-            binding.coinListFragmentUserName.text = it
-        }
-    }
 
     private fun getAllCoins() {
         coinListViewModel.coinList.observe(viewLifecycleOwner) {

@@ -1,31 +1,35 @@
 package com.aydinpolat.bitcointicker.data.remote.model
 
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "coin_list")
-data class CoinListItem(
-    @PrimaryKey
+data class CoinListItemDto(
     @SerializedName("id")
     val id: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("symbol")
     val symbol: String,
-    val isFavorite: Boolean = false
 )
 
-fun DocumentSnapshot.toCoinListItem(): CoinListItem? {
+fun CoinListItemDto.toDomain(): CoinListItem {
+    return CoinListItem(
+        id = id,
+        name = name,
+        symbol = symbol
+    )
+}
+
+fun DocumentSnapshot.toDomain(): CoinListItem? {
     val id = getString("id")
     val name = getString("name")
     val symbol = getString("symbol")
     val isFavorite = getBoolean("favorite")
-    if (id.isNullOrEmpty() || name.isNullOrEmpty() || symbol.isNullOrEmpty()) {
-        return null
+    return if (id.isNullOrEmpty() || name.isNullOrEmpty() || symbol.isNullOrEmpty()) {
+        null
     } else {
-        return  isFavorite?.let { favorite -> CoinListItem(id, name, symbol, favorite) }
+        isFavorite?.let { favorite -> CoinListItem(id, name, symbol, favorite) }
     }
 }
