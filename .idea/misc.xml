@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable/custom_coint_item_background.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/custom_edittext_input.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/custom_radius_background_dark_purple.xml" value="0.2215" />
+        <entry key="app/src/main/res/drawable/custom_radius_background_light_purple.xml" value="0.225" />
         <entry key="app/src/main/res/drawable/ic_coin_list.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/ic_crypto.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/ic_empty.xml" value="0.215" />
@@ -19,6 +20,7 @@
         <entry key="app/src/main/res/drawable/visibility_off.xml" value="0.2215" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3880208333333333" />
         <entry key="app/src/main/res/layout/custom_loading_dialog.xml" value="0.24047501237011382" />
+        <entry key="app/src/main/res/layout/custom_set_time_dialog.xml" value="0.3880208333333333" />
         <entry key="app/src/main/res/layout/fragment_coin_detail.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout/fragment_coin_list.xml" value="0.3880208333333333" />
         <entry key="app/src/main/res/layout/fragment_favorites.xml" value="0.3880208333333333" />

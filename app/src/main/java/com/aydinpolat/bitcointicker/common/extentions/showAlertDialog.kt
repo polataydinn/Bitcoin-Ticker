@@ -1,5 +1,6 @@
 package com.aydinpolat.bitcointicker.common.extentions
 
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.aydinpolat.bitcointicker.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

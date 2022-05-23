@@ -12,10 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.aydinpolat.bitcointicker.R
-import com.aydinpolat.bitcointicker.common.Constants.FAVORITE_ADD_ERROR
-import com.aydinpolat.bitcointicker.common.Constants.FAVORITE_ADD_SUCCESS
+import com.aydinpolat.bitcointicker.common.SetTimerDialog
 import com.aydinpolat.bitcointicker.data.remote.model.CoinDetail
 import com.aydinpolat.bitcointicker.databinding.FragmentCoinDetailBinding
+import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,8 +29,12 @@ class CoinDetailFragment : BindingFragment<FragmentCoinDetailBinding>() {
 
     private val coinDetailViewModel: CoinDetailViewModel by viewModels()
 
+    private var timerDialog: SetTimerDialog? = null
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        timerDialog = SetTimerDialog(activity as MainActivity)
         setListeners()
         getCoinDetail()
         setObserves()
@@ -47,6 +51,13 @@ class CoinDetailFragment : BindingFragment<FragmentCoinDetailBinding>() {
             } else {
                 coinDetailViewModel.setFavorite()
             }
+        }
+
+        binding.detailFragmentSetTimerButton.setOnClickListener {
+            timerDialog?.startTimerDialog()
+        }
+        timerDialog?.listener = {
+            coinDetailViewModel.setTimer(it)
         }
     }
 
@@ -70,9 +81,9 @@ class CoinDetailFragment : BindingFragment<FragmentCoinDetailBinding>() {
     private fun setObserves() {
         coinDetailViewModel.isAddedToFavorite.observe(viewLifecycleOwner) {
             if (it) {
-                Toast.makeText(activity, FAVORITE_ADD_SUCCESS, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.favorite_add_success, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(activity, FAVORITE_ADD_ERROR, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.favorites_add_error, Toast.LENGTH_SHORT).show()
             }
         }
 

@@ -9,11 +9,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.aydinpolat.bitcointicker.R
+import com.aydinpolat.bitcointicker.common.LoadingDialog
+import com.aydinpolat.bitcointicker.common.extentions.hideKeyboard
 import com.aydinpolat.bitcointicker.common.extentions.showAlertDialog
 import com.aydinpolat.bitcointicker.databinding.FragmentLoginBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
-import com.aydinpolat.bitcointicker.util.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -60,6 +61,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         loginViewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
                 is SignInUiEvent.Navigate -> {
+                    (activity as MainActivity).hideKeyboard()
                     findNavController().apply {
                         navigate(it.direction)
                     }

@@ -1,4 +1,4 @@
-package com.aydinpolat.bitcointicker.util
+package com.aydinpolat.bitcointicker.common
 
 import android.app.Activity
 import android.app.AlertDialog

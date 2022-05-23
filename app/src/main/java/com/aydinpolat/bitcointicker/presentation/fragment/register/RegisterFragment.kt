@@ -13,7 +13,8 @@ import com.aydinpolat.bitcointicker.common.extentions.showAlertDialog
 import com.aydinpolat.bitcointicker.databinding.FragmentRegisterBinding
 import com.aydinpolat.bitcointicker.presentation.activity.MainActivity
 import com.aydinpolat.bitcointicker.presentation.binding_adapter.BindingFragment
-import com.aydinpolat.bitcointicker.util.LoadingDialog
+import com.aydinpolat.bitcointicker.common.LoadingDialog
+import com.aydinpolat.bitcointicker.common.extentions.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -37,6 +38,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
         registerViewModel.uiEvent.observe(viewLifecycleOwner) {
             when (it) {
                 is RegisterUiEvent.Navigate -> {
+                    (activity as MainActivity).hideKeyboard()
                     findNavController().apply {
                         navigate(it.direction)
                     }

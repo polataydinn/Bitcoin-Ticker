@@ -1,5 +1,6 @@
 package com.aydinpolat.bitcointicker.presentation.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.aydinpolat.bitcointicker.CoinService
 import com.aydinpolat.bitcointicker.R
 import com.aydinpolat.bitcointicker.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,5 +45,10 @@ class MainActivity : AppCompatActivity() {
             navGraph.setStartDestination(startDestinationId)
             graph = navGraph
         }
+    }
+
+    override fun onPause() {
+        startService(Intent(this, CoinService::class.java))
+        super.onPause()
     }
 }

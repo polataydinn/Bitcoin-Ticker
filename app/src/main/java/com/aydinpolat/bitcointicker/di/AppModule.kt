@@ -3,6 +3,7 @@ package com.aydinpolat.bitcointicker.di
 import android.content.Context
 import androidx.room.Room
 import com.aydinpolat.bitcointicker.BuildConfig
+import com.aydinpolat.bitcointicker.common.DataStoreManager
 import com.aydinpolat.bitcointicker.data.local.CoinDao
 import com.aydinpolat.bitcointicker.data.local.CoinDatabase
 import com.aydinpolat.bitcointicker.data.remote.CoinApi
@@ -70,5 +71,9 @@ object AppModule {
         return CoinRepositoryImplementation(coinApi, coinDao)
     }
 
-
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
+        return DataStoreManager(context)
+    }
 }

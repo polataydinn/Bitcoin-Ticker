@@ -1,10 +1,13 @@
 package com.aydinpolat.bitcointicker.presentation.fragment.coin_detail
 
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aydinpolat.bitcointicker.common.Constants
+import com.aydinpolat.bitcointicker.common.Constants.INTERVAL_TIME
+import com.aydinpolat.bitcointicker.common.DataStoreManager
 import com.aydinpolat.bitcointicker.common.Resource
 import com.aydinpolat.bitcointicker.domain.model.CoinListItem
 import com.aydinpolat.bitcointicker.domain.repository.FirebaseRepository
@@ -22,7 +25,8 @@ import javax.inject.Inject
 class CoinDetailViewModel @Inject constructor(
     private val coinDetailUseCase: GetCoinDetailUseCase,
     private val firebaseRepository: FirebaseRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val dataStoreManager: DataStoreManager
 ) : ViewModel() {
 
     private val _coinDetailState = MutableStateFlow(CoinDetailState())
@@ -93,6 +97,12 @@ class CoinDetailViewModel @Inject constructor(
                 firebaseRepository.removeFavoriteCoin(coinDetail.id)
                 checkIfFavorite(coinDetail.id)
             }
+        }
+    }
+
+    fun setTimer(time: Int) {
+        viewModelScope.launch {
+            dataStoreManager.storeValue(intPreferencesKey(INTERVAL_TIME), time)
         }
     }
 }
