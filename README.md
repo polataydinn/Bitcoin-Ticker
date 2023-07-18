@@ -21,8 +21,8 @@ Bitcoin Ticker is a small demo application with mvvm architecture in accordance 
   - ViewModel - UI related data holder, lifecycle aware.
 - Architecture
   -  MVVM Architecture
-  -  Repository pattern
 - Design Patterns
   -  Proxy
+  -  Repository pattern
 
   
